@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import GeneralEditor from "./pages/GeneralEditor";
+import EditorList from "./pages/EditorList";
+import styled from "@emotion/styled";
+import { FC } from "react";
 
-function App() {
+const App: FC<{ className?: string }> = ({ className }) => {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <GeneralEditor />,
+    },
+    {
+      path: "/editor-list",
+      element: <EditorList />,
+    },
+  ]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={className}>
+      <RouterProvider router={router} />
     </div>
   );
-}
+};
 
-export default App;
+export default styled(App)``;
