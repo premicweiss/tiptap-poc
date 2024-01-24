@@ -1,14 +1,14 @@
 import Heading from "@tiptap/extension-heading";
 import { mergeAttributes } from "@tiptap/react";
 
-interface CustomHeadingExtensionOptions {
+interface HeadingNodeOptions {
   levels: number[];
   HTMLAttributes: {
     color?: string;
   };
 }
 
-const CustomHeadingExtension = Heading.extend<CustomHeadingExtensionOptions>({
+const HeadingNode = Heading.extend<HeadingNodeOptions>({
   addAttributes() {
     return {
       color: {
@@ -37,4 +37,4 @@ const CustomHeadingExtension = Heading.extend<CustomHeadingExtensionOptions>({
   },
 });
 
-export default CustomHeadingExtension;
+export default HeadingNode;

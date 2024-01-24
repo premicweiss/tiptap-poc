@@ -52,7 +52,7 @@ export default Node.create({
   },
   addKeyboardShortcuts() {
     return {
-      "Mod-Shift-y": () => this.editor.commands.toggleFooter(),
+      "Mod-Shift-y": () => this.editor.commands.toggleFooter({ count: 0 }),
     };
   },
 

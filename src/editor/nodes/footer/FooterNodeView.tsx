@@ -1,9 +1,5 @@
 import styled from "@emotion/styled";
-import {
-  NodeViewRendererProps,
-  NodeViewWrapper,
-  NodeViewContent,
-} from "@tiptap/react";
+import { NodeViewRendererProps, NodeViewWrapper } from "@tiptap/react";
 import { FC } from "react";
 
 interface FooterNodeViewProps extends NodeViewRendererProps {
@@ -23,12 +19,9 @@ const FooterNodeView: FC<FooterNodeViewProps> = ({
     <NodeViewWrapper contentEditable={false} className={className}>
       <p>React component</p>
 
-      <button onClick={onButtonClick}>
-        Click this button and see what happens
-      </button>
+      <button onClick={onButtonClick}>Add another footer</button>
 
       <div>{node.attrs?.count}</div>
-      <div>{node.attrs?.style}</div>
     </NodeViewWrapper>
   );
 };
@@ -36,4 +29,6 @@ const FooterNodeView: FC<FooterNodeViewProps> = ({
 export default styled(FooterNodeView)`
   padding: 20px;
   border: 2px solid magenta;
+
+  margin: 10px 0;
 `;

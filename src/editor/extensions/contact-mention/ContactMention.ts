@@ -1,4 +1,7 @@
 import Mention from "@tiptap/extension-mention";
+// import { ReactNodeViewRenderer } from "@tiptap/react";
+// import ContactMentionNodeView from "./ContactMentionNodeView";
+
 import suggestion from "./suggestion";
 
 const EXTENSION_NAME = "contact-mention";
@@ -20,6 +23,11 @@ const ContactMention = Mention.extend({
       },
     };
   },
+
+  // Toggle to make this a node view
+  // addNodeView() {
+  //   return ReactNodeViewRenderer(ContactMentionNodeView);
+  // },
 });
 
 export default ContactMention;

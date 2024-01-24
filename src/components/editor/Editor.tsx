@@ -5,7 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
 import MenuBar from "./MenuBar";
-import CustomHeadingNode from "../../editor/nodes/heading/HeadingNode";
+import HeadingNode from "../../editor/nodes/heading/HeadingNode";
 import HeaderNode from "../../editor/nodes/header/HeaderNode";
 import FooterNode from "../../editor/nodes/footer/FooterNode";
 import ContactMention from "../../editor/extensions/contact-mention/ContactMention";
@@ -45,22 +45,22 @@ const Editor: FC<{ className?: string }> = ({ className }) => {
     }),
     HeaderNode,
     FooterNode,
-    CustomHeadingNode.configure({
+    HeadingNode.configure({
       levels: [1, 3],
     }),
     OrganizationMention,
     ContactMention,
   ];
 
-  // const onEditorUpdate = ({ editor }: { editor: any }) => {
-  //   console.log(editor.getJSON());
-  // };
+  const onEditorUpdate = ({ editor }: { editor: any }) => {
+    console.log(editor.getJSON());
+  };
 
   return (
     <div className={className}>
       <EditorProvider
         content={content}
-        // onUpdate={(props) => onEditorUpdate(props)}
+        onUpdate={(props) => onEditorUpdate(props)}
         extensions={extensions}
         slotBefore={<MenuBar />}
       >
