@@ -1,66 +1,64 @@
-import { FC, useMemo } from "react";
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
+import { HocuspocusProvider } from "@hocuspocus/provider";
 import Document from "@tiptap/extension-document";
 import { EditorProvider, FloatingMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import MenuBar from "./MenuBar";
-import HeadingNode from "../../editor/nodes/heading/HeadingNode";
-import HeaderNode from "../../editor/nodes/header/HeaderNode";
-import FooterNode from "../../editor/nodes/footer/FooterNode";
+import { FC, useMemo } from "react";
 import ContactMention from "../../editor/extensions/contact-mention/ContactMention";
 import OrganizationMention from "../../editor/extensions/organization-mention/OrganizationMention";
+import FooterNode from "../../editor/nodes/footer/FooterNode";
+import HeaderNode from "../../editor/nodes/header/HeaderNode";
+import HeadingNode from "../../editor/nodes/heading/HeadingNode";
+import MenuBar from "./MenuBar";
 
+import Collaboration from '@tiptap/extension-collaboration';
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
+import { IndexeddbPersistence } from "y-indexeddb";
+import * as Y from 'yjs';
+
+
+const user = { name: "User " + Math.random(), color: "#" + Math.floor(Math.random() * 16777215).toString(16) };
 const Editor: FC<{ className?: string }> = ({ className }) => {
-  const content = useMemo(() => {
-    return {
-      type: "doc",
-      content: [
-        {
-          type: "customHeader",
-          attrs: {
-            style: "color: purple;",
-          },
-        },
-        {
-          type: "customFooter",
-          attrs: {
-            count: 5,
-          },
-        },
-        {
-          type: "customFooter",
-          attrs: {
-            count: 2.7220609337325508,
-          },
-        },
-      ],
-    };
-  }, []);
+  const doc = useMemo(() => new Y.Doc(), [])
 
-  const extensions = [
-    StarterKit.configure({ document: false }),
-    Document.extend({
-      content: "customHeader block*",
-    }),
-    HeaderNode,
-    FooterNode,
-    HeadingNode.configure({
-      levels: [1, 3],
-    }),
-    OrganizationMention,
-    ContactMention,
-  ];
+  useMemo(() => { new IndexeddbPersistence('example-document', doc) }, [doc])
+  const provider = useMemo(() => {
+    return new HocuspocusProvider({
+      url: "ws://127.0.0.1:1235",
+      name: "doc123",
+      document: doc
+    })
+  }, [doc])
 
-  const onEditorUpdate = ({ editor }: { editor: any }) => {
-    console.log(editor.getJSON());
-  };
+
+  const extensions = useMemo(() => {
+    return [
+      Collaboration.configure({
+        document: doc,
+      }),
+      // Collab cursor data
+      CollaborationCursor.configure({
+        provider: provider,
+        user
+      }),
+      StarterKit.configure({ heading: false, document: false, history: false }),
+      Document.extend({
+        content: "customHeader block*",
+      }),
+      HeaderNode,
+      FooterNode,
+      HeadingNode.configure({
+        levels: [1, 3],
+      }),
+      OrganizationMention,
+      ContactMention,
+    ]
+  }, [doc, provider]);
 
   return (
     <div className={className}>
       <EditorProvider
-        content={content}
-        onUpdate={(props) => onEditorUpdate(props)}
         extensions={extensions}
         slotBefore={<MenuBar />}
       >
@@ -144,6 +142,42 @@ export default styled(Editor)(
     .floating-menu {
       font-size: 12px;
       color: gray;
+    }
+
+    /* Placeholder (at the top) */
+    .tiptap p.is-editor-empty:first-of-type::before {
+      color: #adb5bd;
+      content: attr(data-placeholder);
+      float: left;
+      height: 0;
+      pointer-events: none;
+    }
+
+    /* Give a remote user a caret */
+    .collaboration-cursor__caret {
+      border-left: 1px solid #0d0d0d;
+      border-right: 1px solid #0d0d0d;
+      margin-left: -1px;
+      margin-right: -1px;
+      pointer-events: none;
+      position: relative;
+      word-break: normal;
+    }
+
+    /* Render the username above the caret */
+    .collaboration-cursor__label {
+      border-radius: 3px 3px 3px 0;
+      color: #0d0d0d;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 600;
+      left: -1px;
+      line-height: normal;
+      padding: 0.1rem 0.3rem;
+      position: absolute;
+      top: -1.4em;
+      user-select: none;
+      white-space: nowrap;
     }
   `
 );
